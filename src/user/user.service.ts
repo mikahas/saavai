@@ -7,6 +7,7 @@ import { User } from './user.entity';
 import { ConfigService } from '../services/config/config.service';
 import { CreateUserDto } from './create-user.dto';
 import * as jwt from 'jsonwebtoken';
+import { UserCredentialsDto } from './user-credentials.dto';
 
 export class UserPayload {
     readonly id: number;
@@ -49,7 +50,7 @@ export class UserService {
     return this.omitHash(user);
   }
 
-  async login(credentials: CreateUserDto): Promise<TokenResponse> {
+  async login(credentials: UserCredentialsDto): Promise<TokenResponse> {
       if (!credentials.email) throw new Error('Email not found.');
       const token = await this.userRepository.find({ email: credentials.email })
         .then((users: User[]): string => {
