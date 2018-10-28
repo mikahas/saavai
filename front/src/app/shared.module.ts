@@ -1,21 +1,35 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule, MatCheckboxModule } from '@angular/material';
-import { FormsModule } from '@angular/forms';
+import {
+  MatButtonModule, MatCheckboxModule, MatCardModule,
+  MatIconModule, MatFormFieldModule, MatInputModule
+} from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
+const materialModules = [
+  MatButtonModule,
+  MatCheckboxModule,
+  MatCardModule,
+  MatIconModule,
+  MatFormFieldModule,
+  MatInputModule
+];
 
 @NgModule({
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatCheckboxModule
+    ...materialModules,
+    FlexLayoutModule,
+    ReactiveFormsModule
   ],
   declarations: [],
   exports: [
     CommonModule,
     FormsModule,
-    MatButtonModule,
-    MatCheckboxModule
+    ...materialModules,
+    FlexLayoutModule,
+    ReactiveFormsModule
   ]
 })
 export class SharedModule { }
