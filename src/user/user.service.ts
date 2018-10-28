@@ -8,14 +8,11 @@ import { ConfigService } from '../services/config/config.service';
 import { CreateUserDto } from './create-user.dto';
 import * as jwt from 'jsonwebtoken';
 import { UserCredentialsDto } from './user-credentials.dto';
+import { TokenResponseDto } from './token-response.dto';
 
 export class UserPayload {
     readonly id: number;
 };
-
-export class TokenResponse {
-    readonly token: string
-}
 
 const saltRounds = 8;
 const tokenExpiryTime = 86400; // 24h
@@ -43,7 +40,15 @@ export class UserService {
     return this.omitHash(newUser);
   }
 
-  async login(credentials: UserCredentialsDto): Promise<TokenResponse> {
+  async findByToken(token: string): Promise<User> {
+    if (!token) throw new Error('Token not found.');
+    const payload = <UserPayload>jwt.verify(token, this.config.get('TOKEN_SECRET'));
+    const user = await this.userRepository.findOne(payload.id);
+    return this.omitHash(user);
+  }
+
+
+  async login(credentials: UserCredentialsDto): Promise<TokenResponseDto> {
       if (!credentials.email) throw new Error('Email not found.');
       const token = await this.userRepository.find({ email: credentials.email })
         .then((users: User[]): string => {

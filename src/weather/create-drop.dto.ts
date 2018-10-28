@@ -1,5 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
+// Data Transfer Object
 export class CreateDropDto {
 
     @ApiModelProperty()
