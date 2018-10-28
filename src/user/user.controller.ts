@@ -5,9 +5,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { UserCredentialsDto } from './user-credentials.dto';
 import { ApiResponse, ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
+import { User } from './user.decorator';
+import { User as UserEntity } from './user.entity';
 
 @ApiUseTags('user')
-@Controller('user')
+@Controller('api/user')
 export class UserController {
     
     constructor(private readonly userService: UserService) {}
@@ -27,10 +29,8 @@ export class UserController {
     @Get('me')
     @UseGuards(AuthGuard('bearer'))
     @ApiBearerAuth()
-    me(@Headers() headers) {
-        const authHeader: string = headers.authorization;
-        const token = authHeader.substring(7, authHeader.length);
-        return this.userService.findByToken(token);
+    me(@User() user: UserEntity) {
+        return user;
     }
 
     @Post('login')

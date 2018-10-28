@@ -43,13 +43,6 @@ export class UserService {
     return this.omitHash(newUser);
   }
 
-  async findByToken(token: string): Promise<User> {
-    if (!token) throw new Error('Token not found.');
-    const payload = <UserPayload>jwt.verify(token, this.config.get('TOKEN_SECRET'));
-    const user = await this.userRepository.findOne(payload.id);
-    return this.omitHash(user);
-  }
-
   async login(credentials: UserCredentialsDto): Promise<TokenResponse> {
       if (!credentials.email) throw new Error('Email not found.');
       const token = await this.userRepository.find({ email: credentials.email })
