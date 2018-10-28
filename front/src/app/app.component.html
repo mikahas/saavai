@@ -1,1 +1,13 @@
+<mat-toolbar color="primary">
+  <span fxFlex>Sää Vai</span>
+
+  <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+  
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>Logout</button>
+    <button mat-menu-item>Change password</button>
+  </mat-menu>
+
+</mat-toolbar>
+
 <router-outlet></router-outlet>

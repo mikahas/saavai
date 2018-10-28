@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MatButtonModule, MatCheckboxModule, MatCardModule,
-  MatIconModule, MatFormFieldModule, MatInputModule
+  MatIconModule, MatFormFieldModule, MatInputModule, MatToolbarModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -13,7 +13,8 @@ const materialModules = [
   MatCardModule,
   MatIconModule,
   MatFormFieldModule,
-  MatInputModule
+  MatInputModule,
+  MatToolbarModule
 ];
 
 @NgModule({

@@ -12,6 +12,7 @@ import { ApiModule } from './api/api.module';
 import { ApiInterceptor } from './api.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from './auth/auth.service';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 export function initApiConfiguration(config: ApiConfiguration): Function {
   return () => {
@@ -42,7 +43,8 @@ export const API_INTERCEPTOR_PROVIDER: Provider = {
     SharedModule,
     BrowserAnimationsModule,
     LoginModule,
-    ApiModule
+    ApiModule,
+    DashboardModule
   ],
   providers: [
     INIT_API_CONFIGURATION,
