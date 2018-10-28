@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Unique, OneToMany } from 'typeorm';
+import { Weather } from '../weather/weather.entity';
 
 @Entity()
 @Unique(['email'])
@@ -18,5 +19,8 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(type => Weather, weather => weather.user)
+    drops: Weather[];
 
 }
