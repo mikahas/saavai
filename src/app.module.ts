@@ -5,13 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from 'user/user.module';
 import { ConfigModule } from './services/config/config.module';
 import { AuthModule } from './auth/auth.module';
+import { WeatherModule } from './weather/weather.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     UserModule,
     ConfigModule,
-    AuthModule
+    AuthModule,
+    WeatherModule
   ],
   controllers: [AppController],
   providers: [AppService],
