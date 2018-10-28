@@ -1,0 +1,42 @@
+<div fxLayout="row" fxLayoutAlign="center center" class="login-wrapper">
+
+  <div [fxFlex.md]="25"></div>
+
+  <mat-card [fxFlex.md]="50" [fxFlex.xs]="100">
+
+    <mat-card-header>
+      <mat-card-title>Login to Sää Vai</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <div fxLayout="row">
+          <mat-form-field fxFlex="100">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+            <span *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched">Invalid email</span>
+          </mat-form-field>
+        </div>
+
+        <div fxLayout="row">
+          <mat-form-field fxFlex="100">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password">
+            <span *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">Password is required</span>
+          </mat-form-field>
+        </div>
+
+        <div fxLayout="row">
+          <span fxFlex></span>
+          <button mat-raised-button color="primary" disabled="!loginForm.valid">Login</button>
+        </div>
+
+      </form>
+    </mat-card-content>
+
+  </mat-card>
+
+  <div [fxFlex.md]="25"></div>
+
+</div>
