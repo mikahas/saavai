@@ -6,4 +6,7 @@ export class TokenResponseDto {
     @ApiModelProperty()
     readonly token: string;
 
+    @ApiModelProperty()
+    readonly expiresIn: number;
+
 }

@@ -47,7 +47,6 @@ export class UserService {
     return this.omitHash(user);
   }
 
-
   async login(credentials: UserCredentialsDto): Promise<TokenResponseDto> {
       if (!credentials.email) throw new Error('Email not found.');
       const token = await this.userRepository.find({ email: credentials.email })
@@ -60,7 +59,7 @@ export class UserService {
                 expiresIn: tokenExpiryTime
             });
         });
-    return { token };
+    return { token, expiresIn: tokenExpiryTime };
   }
 
   private omitHash(user: User): User {
