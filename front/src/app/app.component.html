@@ -1,12 +1,25 @@
-<mat-toolbar color="primary">
-  <span fxFlex>Sää Vai</span>
-
-  <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+<mat-toolbar color="primary" *ngIf="isLoggedIn()">
   
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>Logout</button>
-    <button mat-menu-item>Change password</button>
+    <button mat-menu-item (click)="logout()">Logout</button>
+    <button mat-menu-item routerLink="/me" routerLinkActive="active">Show my info</button>
   </mat-menu>
+
+  <span fxFlex></span>
+
+  <span>Sää Vai</span>
+
+  <span fxFlex></span>
+
+  
+  <button routerLink="/dashboard" mat-icon-button>
+    <mat-icon >cloud</mat-icon>
+    
+</button>
 
 </mat-toolbar>
 
