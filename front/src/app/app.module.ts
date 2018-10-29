@@ -13,6 +13,7 @@ import { ApiInterceptor } from './api.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from './auth/auth.service';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { UserModule } from './user/user.module';
 
 export function initApiConfiguration(config: ApiConfiguration): Function {
   return () => {
@@ -38,13 +39,16 @@ export const API_INTERCEPTOR_PROVIDER: Provider = {
     AppComponent
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    SharedModule,
-    BrowserAnimationsModule,
+    DashboardModule,
+    UserModule,
     LoginModule,
     ApiModule,
-    DashboardModule
+
+    BrowserModule,
+    SharedModule,
+    BrowserAnimationsModule,
+
+    AppRoutingModule
   ],
   providers: [
     INIT_API_CONFIGURATION,

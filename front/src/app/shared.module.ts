@@ -2,19 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MatButtonModule, MatCheckboxModule, MatCardModule,
-  MatIconModule, MatFormFieldModule, MatInputModule, MatToolbarModule
+  MatIconModule, MatFormFieldModule, MatInputModule,
+  MatToolbarModule, MatMenuModule, MatListModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 const materialModules = [
-  MatButtonModule,
-  MatCheckboxModule,
-  MatCardModule,
-  MatIconModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatToolbarModule
+  MatButtonModule, MatCheckboxModule, MatCardModule,
+  MatIconModule, MatFormFieldModule, MatInputModule,
+  MatToolbarModule, MatMenuModule, MatListModule
 ];
 
 @NgModule({
