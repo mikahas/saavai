@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, UseGuards, Headers, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Res, HttpStatus, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { UserCredentialsDto } from './user-credentials.dto';
-import { ApiResponse, ApiBearerAuth, ApiUseTags, ApiModelProperty, ApiOperation, ApiImplicitBody } from '@nestjs/swagger';
+import { ApiResponse, ApiBearerAuth, ApiUseTags, ApiOperation } from '@nestjs/swagger';
 import { User } from './user.decorator';
 import { User as UserEntity } from './user.entity';
 import { TokenResponseDto } from './token-response.dto';
@@ -52,6 +52,14 @@ export class UserController {
                 error: "Unauthorized"
             });
         };
+    }
+
+    @Post('generate-api-key')
+    @UseGuards(AuthGuard('bearer'))
+    @ApiBearerAuth()
+    @ApiResponse({ status: 200, type: 'string', description: 'Generated API key' })
+    async generateApiKey(@Req() request): Promise<string> {
+        return this.userService.generateApiKey(request.user);
     }
 
 }
