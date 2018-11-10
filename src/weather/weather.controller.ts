@@ -38,6 +38,10 @@ export class WeatherController {
     }
 
     @Post('log/:apiKey')
+    @ApiImplicitParam({
+        name: 'apiKey',
+        description: 'User API key'
+    })
     @ApiResponse({ status: 200, description: 'Create a new weather entry using token authentication' })
     async log(@Body() drop: CreateDropDto, @Param() params) {
         const user = await this.userService.findByApiKey(params.apiKey);
