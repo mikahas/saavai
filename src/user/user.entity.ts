@@ -29,4 +29,8 @@ export class User {
   @OneToMany(type => Weather, weather => weather.user)
     drops: Weather[];
 
+  @ApiModelProperty()
+  @Column({ unique: true, type: 'varchar', default: '' })
+  apiKey: string;
+
 }
