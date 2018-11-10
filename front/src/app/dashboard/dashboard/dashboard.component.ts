@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Weather } from 'src/app/api/models';
-import { ActivatedRoute } from '@angular/router';
-import { get, keys, map } from 'lodash';
+import { get, keys, map, set, mapValues } from 'lodash';
 import { timer, Subscription } from 'rxjs';
 import { WeatherService } from 'src/app/api/services';
 import { take } from 'rxjs/operators';
@@ -18,7 +17,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private timerSubscription: Subscription;
   private weatherSubscription: Subscription;
-  private readonly refreshTime = 60000;
+  private readonly refreshTime = 60000; // one minute
 
   constructor(
     private readonly weatherService: WeatherService
@@ -39,7 +38,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private refreshData(): void {
     this.weatherSubscription = this.weatherService
-      .getApiWeatherIndex({ range: 'day', from: '2018-11-11' }).pipe(take(1))
+      .getApiWeatherIndex({ range: 'day' }).pipe(take(1))
       .subscribe((weather: Weather[]) => {
         this.data = this.getFormattedWeatherData(weather);
         this.subscribeToWeather();
@@ -54,24 +53,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getFormattedWeatherData(weatherData: Weather[]): any[] {
     // data should contain name/value pair objects in an array
     const sortedData = {};
+    let extremes = {};
     weatherData.forEach((element: Weather) => {
       const elementKeys = keys(element.data);
-      elementKeys.forEach((elementKey: string) => {
-        
+      elementKeys.forEach((elementKey: string) => {        
         if (!sortedData[elementKey]) sortedData[elementKey] = [];
+        const value = get(element, `data.${elementKey}`);
+        if (!get(extremes, elementKey)) {
+          set(extremes, `${elementKey}.min`, value);
+          set(extremes, `${elementKey}.max`, value);
+        }
+        if (value < extremes[elementKey].min) extremes[elementKey].min = value;
+        if (value > extremes[elementKey].max) extremes[elementKey].max = value;
         sortedData[elementKey].push({
-          value: get(element, `data.${elementKey}`),
-          name: new Date(<string>element.createdAt)
+          name: new Date(<string>element.createdAt),
+          value
         });
 
       });
     });
 
-    return map(sortedData, (element, key) => {
-      return {
-        name: key,
-        series: element
-      };
+    return map(sortedData, (series, name) => {
+      return { name, series, extremes: get(extremes, name) };
     });
 
   }

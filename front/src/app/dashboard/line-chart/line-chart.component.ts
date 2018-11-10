@@ -25,7 +25,7 @@ export class LineChartComponent implements OnInit {
   showYAxisLabel = true;
 
   xAxisLabel = 'Date / time';
-  yAxisLabel = 'Temperature';
+  yAxisLabel = '';
 
   autoScale: boolean = true;
   timeline: boolean = false;
@@ -38,11 +38,24 @@ export class LineChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+
+    this.balanceScales();
+
     this.yAxisLabel = this.name;
     this.data = [{
       name: this.name,
       series: this.series
     }];
+  }
+
+  balanceScales() {
+    // add a padding of half the difference of min and max
+    // to the extremes to even out the chart a bit
+    if (this.yScaleMin !== undefined && this.yScaleMax !== undefined) {
+      const difference = (this.yScaleMax - this.yScaleMin) * 0.5;
+      this.yScaleMin = this.yScaleMin - difference;
+      this.yScaleMax = this.yScaleMax + difference;
+    }
   }
 
   dateTickFormatting(val) {

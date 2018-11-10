@@ -6,7 +6,9 @@
 
       <saa-line-chart
         [name]="element.name"
-        [series]="element.series">
+        [series]="element.series"
+        [yScaleMin]="element.extremes.min"
+        [yScaleMax]="element.extremes.max">
       </saa-line-chart>
 
     </div>
