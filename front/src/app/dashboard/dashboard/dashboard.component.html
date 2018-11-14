@@ -3,11 +3,25 @@
 	<div *ngIf="locations.length" fxLayout="column">
 
 		<div fxLayout="row">
+
 			<span fxFlex></span>
+
 			<div>
+
 				<mat-form-field>
 					<mat-select
-						required
+						[(ngModel)]="activeRange"
+						(selectionChange)="doRefresh()">
+						<mat-option
+							[value]="range"
+							*ngFor="let range of ranges">
+							{{range}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<mat-form-field class="padding-left">
+					<mat-select
 						[(ngModel)]="activeLocation"
 						(selectionChange)="doRefresh()">
 						<mat-option
@@ -17,6 +31,7 @@
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
+
 				<span class="padding-left">
 					<button
 						mat-button
@@ -26,6 +41,7 @@
 						Refresh now!
 					</button>
 				</span>
+
 			</div>
 		</div>
 	</div>

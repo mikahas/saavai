@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Weather } from 'src/app/api/models';
-import { get, keys, map, set, reduce } from 'lodash';
+import { get, keys, map, set, reduce, find } from 'lodash';
 import { timer, Subscription, forkJoin } from 'rxjs';
 import { WeatherService } from 'src/app/api/services';
 import { ActivatedRoute } from '@angular/router';
 
+export type ValidRanges = 'week' | 'day' | 'hour';
 
 @Component({
 	selector: 'saa-dashboard',
@@ -18,6 +19,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	locations: string[];
 	isLoading: boolean = false;
 
+	readonly ranges: ValidRanges[] = ['week', 'day', 'hour'];
+	activeRange: ValidRanges;
+	defaultRange: ValidRanges = 'day';
+
 	private activeLocation: string;
 	private timerSubscription: Subscription;
 	private weatherSubscription: Subscription;
@@ -29,6 +34,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
+		this.activeRange = find(this.ranges, range => range === this.defaultRange);
 		this.locations = this.route.snapshot.data['locations'];
 		if (this.locations.length) {
 			this.activeLocation = this.locations[0];
@@ -52,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.isLoading = true;
 		this.latestData = [];
 		const weather$ = this.weatherService
-			.getApiWeatherIndex({ range: 'day', location: this.activeLocation });
+			.getApiWeatherIndex({ range: this.activeRange, location: this.activeLocation });
 
 		const latest$ = this.weatherService
 			.getApiWeatherLatest(this.activeLocation);
