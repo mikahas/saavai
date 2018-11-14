@@ -1,17 +1,43 @@
 <div class="wrapper-padding">
 
-  <mat-card class="chart-card" *ngFor="let element of data">
+  <div *ngIf="locations.length">
 
-    <div class="saa-chart" fxFlex>
+    <mat-card class="chart-card">
+      <div fxFlex>
+        <mat-form-field>
+          <mat-select
+            required
+            [(ngModel)]="activeLocation"
+            (selectionChange)="locationChange()">
+            <mat-option [value]="location" *ngFor="let location of locations">{{location}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-      <saa-line-chart
-        [name]="element.name"
-        [series]="element.series"
-        [yScaleMin]="element.extremes.min"
-        [yScaleMax]="element.extremes.max">
-      </saa-line-chart>
+      <div fxFlex="grow">
+        <saa-number-card fxFlex [data]="latestData"></saa-number-card>
+      </div>
+    </mat-card>
 
-    </div>
-  </mat-card>
+    <mat-card class="chart-card" *ngFor="let element of data">
+
+      <div class="saa-chart" fxFlex>
+
+        <saa-line-chart
+          [name]="element.name"
+          [series]="element.series"
+          [yScaleMin]="element.extremes.min"
+          [yScaleMax]="element.extremes.max">
+        </saa-line-chart>
+
+      </div>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!locations.length">
+    <mat-card class="chart-card">
+      <p>No data found!</p>
+    </mat-card>
+  </div>
 
 </div>
