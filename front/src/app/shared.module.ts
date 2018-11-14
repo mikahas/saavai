@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import {
   MatButtonModule, MatCheckboxModule, MatCardModule,
   MatIconModule, MatFormFieldModule, MatInputModule,
-  MatToolbarModule, MatMenuModule, MatListModule
+  MatToolbarModule, MatMenuModule, MatListModule,
+  MatOptionModule, MatSelectModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -11,7 +12,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 const materialModules = [
   MatButtonModule, MatCheckboxModule, MatCardModule,
   MatIconModule, MatFormFieldModule, MatInputModule,
-  MatToolbarModule, MatMenuModule, MatListModule
+  MatToolbarModule, MatMenuModule, MatListModule,
+  MatOptionModule, MatSelectModule
 ];
 
 @NgModule({
