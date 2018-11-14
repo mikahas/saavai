@@ -15,4 +15,10 @@ export class QueryWeatherIndexDto {
     })
     readonly from: Date;
 
+    @ApiModelProperty({
+        required: false,
+        description: 'Limit results to a specific location'
+    })
+    readonly location: string;
+
 }

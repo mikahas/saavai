@@ -8,6 +8,7 @@ import { User as UserEntity } from 'user/user.entity';
 import { Weather } from './weather.entity';
 import { QueryWeatherIndexDto } from './query-weather-index.dto';
 import { UserService } from 'user/user.service';
+import { QueryLatestWeatherDto } from './query-latest-weather.dto';
 
 @ApiUseTags('weather')
 @Controller('api/weather')
@@ -23,10 +24,10 @@ export class WeatherController {
     @UseGuards(AuthGuard('bearer'))
     @ApiResponse({
         status: 200, type: Weather, isArray: true,
-        description: 'Get weather entries from log for current user .'
+        description: 'Get weather entries from log for current user.'
     })
     async index(@Query() query: QueryWeatherIndexDto, @User() user: UserEntity): Promise<Weather[]> {
-        return this.weatherService.index(user, query.range, query.from);
+        return this.weatherService.index(user, query);
     }
 
     @Post()
@@ -49,5 +50,30 @@ export class WeatherController {
         if (!user) return true;
         await this.weatherService.create(drop, user);
         return true;
+    }
+
+    @Get('latest')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('bearer'))
+    @ApiResponse({
+        status: 200, type: Weather, isArray: true,
+        description: 'Get latest weather entries by location from log for current user.'
+    })
+    async latest(
+        @Query() query: QueryLatestWeatherDto,
+        @User() user: UserEntity
+    ): Promise<Weather[]> {
+        return this.weatherService.latest(user, query.location);
+    }
+
+    @Get('locations')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('bearer'))
+    @ApiResponse({
+        status: 200, type: 'string', isArray: true,
+        description: 'Get weather entry locations for current user.'
+    })
+    async locations(@User() user): Promise<string[]> {
+        return this.weatherService.locations(user);
     }
 }
