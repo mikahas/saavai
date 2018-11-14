@@ -1,26 +1,35 @@
-<mat-toolbar color="primary" *ngIf="isLoggedIn()">
-  
-  <button mat-icon-button [matMenuTriggerFor]="menu">
-    <mat-icon>menu</mat-icon>
-  </button>
+<div class="app-wrapper" fxLayout="column">
 
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="logout()">Logout</button>
-    <button mat-menu-item routerLink="/me" routerLinkActive="active">Show my info</button>
-  </mat-menu>
+	<mat-toolbar color="primary" *ngIf="isLoggedIn()">
 
-  <span fxFlex></span>
+		<button mat-icon-button [matMenuTriggerFor]="menu">
+			<mat-icon>menu</mat-icon>
+		</button>
 
-  <span>Sää Vai</span>
+		<mat-menu #menu="matMenu">
+			<button mat-menu-item routerLink="/dashboard">Dashboard</button>
+			<button mat-menu-item routerLink="/me" routerLinkActive="active">Show my info</button>
+			<button mat-menu-item (click)="logout()">Logout</button>
+		</mat-menu>
 
-  <span fxFlex></span>
+		<span fxFlex></span>
 
-  
-  <button routerLink="/dashboard" mat-icon-button>
-    <mat-icon >cloud</mat-icon>
-    
-</button>
+		<span>Sää Vai</span>
 
-</mat-toolbar>
+		<span fxFlex></span>
 
-<router-outlet></router-outlet>
+		<button routerLink="/dashboard" mat-icon-button>
+			<mat-icon >cloud</mat-icon>
+		</button>
+
+	</mat-toolbar>
+
+	<div fxLayout="column" fxFlex="grow">
+		<router-outlet></router-outlet>
+	</div>
+
+	<mat-toolbar class="toolbar-footer">
+		<p>Mika Hassinen &copy; 2018</p>
+	</mat-toolbar>
+
+</div>

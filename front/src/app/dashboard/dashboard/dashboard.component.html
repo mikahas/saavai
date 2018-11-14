@@ -1,43 +1,71 @@
 <div class="wrapper-padding">
 
-  <div *ngIf="locations.length">
+	<div *ngIf="locations.length" fxLayout="column">
 
-    <mat-card class="chart-card">
-      <div fxFlex>
-        <mat-form-field>
-          <mat-select
-            required
-            [(ngModel)]="activeLocation"
-            (selectionChange)="locationChange()">
-            <mat-option [value]="location" *ngFor="let location of locations">{{location}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+		<div fxLayout="row">
+			<span fxFlex></span>
+			<div>
+				<mat-form-field>
+					<mat-select
+						required
+						[(ngModel)]="activeLocation"
+						(selectionChange)="doRefresh()">
+						<mat-option
+							[value]="location"
+							*ngFor="let location of locations">
+							{{location}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<span class="padding-left">
+					<button
+						mat-button
+						mat-raised-button
+						color="primary"
+						(click)="doRefresh()">
+						Refresh now!
+					</button>
+				</span>
+			</div>
+		</div>
+	</div>
 
-      <div fxFlex="grow">
-        <saa-number-card fxFlex [data]="latestData"></saa-number-card>
-      </div>
-    </mat-card>
+	<div
+		*ngIf="isLoading"
+		fxLayout="column"
+		class="spinner-wrapper"
+		fxLayoutAlign="center center">
+		<mat-spinner></mat-spinner>
+	</div>
 
-    <mat-card class="chart-card" *ngFor="let element of data">
+	<div *ngIf="!isLoading" fxLayout="column">
 
-      <div class="saa-chart" fxFlex>
+		<mat-card class="chart-card" fxLayout="row">
+			<div fxFlex="grow">
+				<saa-number-card fxFlex [data]="latestData"></saa-number-card>
+			</div>
+		</mat-card>
 
-        <saa-line-chart
-          [name]="element.name"
-          [series]="element.series"
-          [yScaleMin]="element.extremes.min"
-          [yScaleMax]="element.extremes.max">
-        </saa-line-chart>
+		<mat-card class="chart-card" *ngFor="let element of data">
 
-      </div>
-    </mat-card>
-  </div>
+			<div class="saa-chart" fxFlex>
 
-  <div *ngIf="!locations.length">
-    <mat-card class="chart-card">
-      <p>No data found!</p>
-    </mat-card>
-  </div>
+				<saa-line-chart
+					[name]="element.name"
+					[series]="element.series"
+					[yScaleMin]="element.extremes.min"
+					[yScaleMax]="element.extremes.max">
+				</saa-line-chart>
+
+			</div>
+		</mat-card>
+
+	</div>
+
+	<div *ngIf="!locations.length">
+		<mat-card class="chart-card">
+			<p>No data found!</p>
+		</mat-card>
+	</div>
 
 </div>

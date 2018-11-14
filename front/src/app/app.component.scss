@@ -1,0 +1,15 @@
+:host {
+	display: block;
+	min-height: 100vh;
+	.app-wrapper {
+		display: block;
+		min-height: 100vh;
+	}
+}
+.toolbar-footer {
+	p {
+		text-align: center;
+		font-size: 1.1rem;
+		width: 100%;
+	}
+}

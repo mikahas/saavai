@@ -1,11 +1,16 @@
-.login-wrapper {
-    height: 100%;
+:host {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 mat-form-field {
-    width: 100%;
-    input {
-        width: 100%;
-    }
+	width: 100%;
+	input {
+		width: 100%;
+	}
 }
 
+.card-login {
+	max-height: 230px;
+}

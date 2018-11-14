@@ -7,114 +7,118 @@ import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
-  selector: 'saa-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+	selector: 'saa-dashboard',
+	templateUrl: './dashboard.component.html',
+	styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-  data: any[];  // TODO: type this
-  latestData: any[] = [];
+	data: any[];  // TODO: type this
+	latestData: any[] = [];
+	locations: string[];
+	isLoading: boolean = false;
 
-  locations: string[];
-  private activeLocation: string;
-  private timerSubscription: Subscription;
-  private weatherSubscription: Subscription;
-  private readonly refreshTime = 600000; // ten minutes
+	private activeLocation: string;
+	private timerSubscription: Subscription;
+	private weatherSubscription: Subscription;
+	private readonly refreshTime = 600000; // ten minutes
 
-  constructor(
-    private readonly weatherService: WeatherService,
-    private route: ActivatedRoute
-  ) { }
+	constructor(
+		private readonly weatherService: WeatherService,
+		private route: ActivatedRoute
+	) { }
 
-  ngOnInit() {
-    this.locations = this.route.snapshot.data['locations'];
-    if (this.locations.length) {
-      this.activeLocation = this.locations[0];
-      this.refreshData();
-    }
-  }
+	ngOnInit() {
+		this.locations = this.route.snapshot.data['locations'];
+		if (this.locations.length) {
+			this.activeLocation = this.locations[0];
+			this.refreshData();
+		}
+	}
 
-  public ngOnDestroy(): void {
+	public ngOnDestroy(): void {
 
-    if (this.timerSubscription) {
-        this.timerSubscription.unsubscribe();
-    }
+		if (this.timerSubscription) {
+			this.timerSubscription.unsubscribe();
+		}
 
-    if (this.weatherSubscription) {
-      this.weatherSubscription.unsubscribe();
-    }
+		if (this.weatherSubscription) {
+			this.weatherSubscription.unsubscribe();
+		}
 
-  }
+	}
 
-  private refreshData(): void {
-    const weather$ = this.weatherService
-      .getApiWeatherIndex({ range: 'day', location: this.activeLocation });
+	private refreshData(): void {
+		this.isLoading = true;
+		this.latestData = [];
+		const weather$ = this.weatherService
+			.getApiWeatherIndex({ range: 'day', location: this.activeLocation });
 
-    const latest$ = this.weatherService
-      .getApiWeatherLatest(this.activeLocation);
+		const latest$ = this.weatherService
+			.getApiWeatherLatest(this.activeLocation);
 
-    this.weatherSubscription = forkJoin(weather$, latest$)
-      .subscribe(([weather, latest]: [Weather[], Weather[]] ) => {
-        this.data = this.getFormattedWeatherData(weather);
-        if (latest.length) this.latestData = this.getFormatLatest(latest.pop());
-        this.subscribeToWeather();
-      });
+		this.weatherSubscription = forkJoin(weather$, latest$)
+			.subscribe(([weather, latest]: [Weather[], Weather[]] ) => {
+				this.isLoading = false;
+				this.data = this.getFormattedWeatherData(weather);
+				if (latest.length) this.latestData = this.getFormatLatest(latest.pop());
+				this.subscribeToWeather();
+			});
 
-  }
+	}
 
-  private getFormatLatest(weather: Weather) {
-    return reduce(weather.data, (reducer, value, key) => {
-      reducer.push({
-        name: key,
-        value: value
-      });
-      return reducer;
-    }, []);
-  }
+	private getFormatLatest(weather: Weather) {
+		return reduce(weather.data, (reducer, value, key) => {
+			reducer.push({
+				name: key,
+				value: value
+			});
+			return reducer;
+		}, []);
+	}
 
-  private subscribeToWeather(): void {
-      this.timerSubscription = timer(this.refreshTime)
-        .subscribe(() => this.refreshData());
-  }
+	private subscribeToWeather(): void {
+		this.timerSubscription = timer(this.refreshTime)
+			.subscribe(() => this.refreshData());
+	}
 
-  getFormattedWeatherData(weatherData: Weather[]): any[] {
-    // data should contain name/value pair objects in an array
-    const sortedData = {};
-    let extremes = {};
+	getFormattedWeatherData(weatherData: Weather[]): any[] {
+		// data should contain name/value pair objects in an array
+		const sortedData = {};
+		let extremes = {};
 
-    weatherData.forEach((element: Weather) => {
-      const elementKeys = keys(element.data);
+		weatherData.forEach((element: Weather) => {
+		const elementKeys = keys(element.data);
 
-      elementKeys.forEach((elementKey: string) => {        
-        if (!sortedData[elementKey]) sortedData[elementKey] = [];
-        const value = get(element, `data.${elementKey}`);
-        if (!get(extremes, elementKey)) {
-          set(extremes, `${elementKey}.min`, value);
-          set(extremes, `${elementKey}.max`, value);
-        }
-        if (value < extremes[elementKey].min) extremes[elementKey].min = value;
-        if (value > extremes[elementKey].max) extremes[elementKey].max = value;
-        sortedData[elementKey].push({
-          name: new Date(<string>element.createdAt),
-          value
-        });
+		elementKeys.forEach((elementKey: string) => {        
+			if (!sortedData[elementKey]) sortedData[elementKey] = [];
+			const value = get(element, `data.${elementKey}`);
+			if (!get(extremes, elementKey)) {
+				set(extremes, `${elementKey}.min`, value);
+				set(extremes, `${elementKey}.max`, value);
+			}
+			if (value < extremes[elementKey].min) extremes[elementKey].min = value;
+			if (value > extremes[elementKey].max) extremes[elementKey].max = value;
+			sortedData[elementKey].push({
+				name: new Date(<string>element.createdAt),
+				value
+			});
 
-      });
+		});
 
-    });
+		});
 
-    return map(sortedData, (series, name) => {
-      return { name, series, extremes: get(extremes, name) };
-    });
+		return map(sortedData, (series, name) => {
+			return { name, series, extremes: get(extremes, name) };
+		});
 
-  }
+	}
 
-  locationChange() {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
-    this.refreshData();
-  }
+	doRefresh() {
+		if (this.timerSubscription) {
+			this.timerSubscription.unsubscribe();
+		}
+		this.refreshData();
+	}
 
 }
