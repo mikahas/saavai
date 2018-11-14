@@ -6,7 +6,7 @@
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
-    "comment-format": [
+	"comment-format": [
       true,
       "check-space"
     ],
@@ -21,10 +21,7 @@
       "rxjs/Rx"
     ],
     "import-spacing": true,
-    "indent": [
-      true,
-      "spaces"
-    ],
+    "indent": [true, "tabs", 2],
     "interface-over-type-literal": true,
     "label-position": true,
     "max-line-length": [
