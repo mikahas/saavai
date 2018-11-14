@@ -6,8 +6,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start": "npm run local-swagger-gen && ng serve",
-    "build": "ng-swagger-gen && ng build -prod",
+    "start": "npm run local-swagger-gen && ng serve --host=0.0.0.0",
+    "build": "npm run local-swagger-gen && ng build --prod",
     "local-swagger-gen": "node_modules/.bin/ng-swagger-gen -i http://localhost:3000/api/docs"
   },
   "private": true,
