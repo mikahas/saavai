@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import * as moment from 'moment';
+import { find } from 'lodash';
+import { colorSets } from '@swimlane/ngx-charts/release/utils';
 
 @Component({
   selector: 'saa-line-chart',
@@ -11,9 +14,7 @@ export class LineChartComponent implements OnInit {
   @Input() series: any[]; // TODO: type this
 
   view: any[];  // width, height
-  colorScheme = {
-    domain: ['#5AA454', '#A10A28']
-  };
+  colorScheme: any;
   gradient: boolean = false;
   
   showXAxis = true;
@@ -39,6 +40,8 @@ export class LineChartComponent implements OnInit {
 
   ngOnInit() {
 
+    this.colorScheme = this.getColorSet('air'); // air, aqua
+
     this.balanceScales();
 
     this.yAxisLabel = this.name;
@@ -48,23 +51,28 @@ export class LineChartComponent implements OnInit {
     }];
   }
 
+  getColorSet(name: string) {
+    return find(colorSets, set => set.name === name);
+  }
+
   balanceScales() {
     // add a padding of half the difference of min and max
     // to the extremes to even out the chart a bit
     if (this.yScaleMin !== undefined && this.yScaleMax !== undefined) {
-      const difference = (this.yScaleMax - this.yScaleMin) * 0.5;
-      this.yScaleMin = this.yScaleMin - difference;
-      this.yScaleMax = this.yScaleMax + difference;
+      const difference = (this.yScaleMax - this.yScaleMin); // * 0.25;
+      this.yScaleMin = Math.round((this.yScaleMin - difference) * 10) / 10;
+      this.yScaleMax = Math.round((this.yScaleMax + difference) * 10) / 10;
     }
   }
 
   dateTickFormatting(val) {
-    // console.log('val', val);
-    if (val instanceof Date) {
-      var options = { month: 'long' };
-      //return (<Date>val).toLocaleString('de-DE', options);
-      return (<Date>val).toLocaleString('fi-FI', options);
-    }
+    // TODO: select range, default: day
+    const time = moment(val).format("HH:mm");
+    return time;
+  }
+
+  valueTickFormatting(val) {
+    return val;
   }
 
   onSelect(event) {
