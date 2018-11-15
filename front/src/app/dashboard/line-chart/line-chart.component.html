@@ -17,7 +17,15 @@
     [yScaleMin]="yScaleMin"
     [yScaleMax]="yScaleMax"
     [xAxisTickFormatting]="dateTickFormatting"
-    [yAxisTickFormatting]="valueTickFormatting"
-    (select)="onSelect($event)">
+	[yAxisTickFormatting]="valueTickFormatting"
+	tooltipTemplate=""
+	(select)="onSelect($event)">
+	<ng-template #tooltipTemplate let-model="model">
+		<div class="tooltip">
+			<h2 class="mat-h2">{{ model.value }}</h2>
+			<h3 class="mat-h3">{{ model.name | date:'d.M.yyyy HH:mm' }}</h3>
+		</div>
+	</ng-template>
   </ngx-charts-line-chart>
 </div>
+

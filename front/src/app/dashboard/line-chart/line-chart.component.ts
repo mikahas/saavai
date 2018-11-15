@@ -10,73 +10,89 @@ import { colorSets } from '@swimlane/ngx-charts/release/utils';
 })
 export class LineChartComponent implements OnInit {
 
-  @Input() name: string;
-  @Input() series: any[]; // TODO: type this
+	@Input() name: string;
+	@Input() series: any[]; // TODO: type this
+	@Input() range: string;
 
-  view: any[];  // width, height
-  colorScheme: any;
-  gradient: boolean = false;
-  
-  showXAxis = true;
-  showYAxis = true;
+	view: any[];  // width, height
+	colorScheme: any;
+	gradient: boolean = false;
+	
+	showXAxis = true;
+	showYAxis = true;
 
-  showLegend = true;
+	showLegend = true;
 
-  showXAxisLabel = true;
-  showYAxisLabel = true;
+	showXAxisLabel = true;
+	showYAxisLabel = true;
 
-  xAxisLabel = 'Date / time';
-  yAxisLabel = '';
+	xAxisLabel = 'Date / time';
+	yAxisLabel = '';
 
-  autoScale: boolean = true;
-  timeline: boolean = false;
+	autoScale: boolean = true;
+	timeline: boolean = false;
 
-  data: any[];  // TODO: type this
+	data: any[];  // TODO: type this
 
-  @Input() yScaleMin: number = null;
-  @Input() yScaleMax: number = null;
+	@Input() yScaleMin: number = null;
+	@Input() yScaleMax: number = null;
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit() {
+	ngOnInit() {
+		this.colorScheme = this.getColorSet('air'); // air, aqua
+		this.balanceScales();
+		this.yAxisLabel = this.name;
+		this.data = [{
+			name: this.name,
+			series: this.series
+		}];
+	}
 
-    this.colorScheme = this.getColorSet('air'); // air, aqua
+	getColorSet(name: string) {
+		return find(colorSets, set => set.name === name);
+	}
 
-    this.balanceScales();
+	balanceScales() {
+		// add a padding of half the difference of min and max
+		// to the extremes to even out the chart a bit
+		if (this.yScaleMin !== undefined && this.yScaleMax !== undefined) {
+			const difference = (this.yScaleMax - this.yScaleMin); // * 0.25;
+			this.yScaleMin = Math.round((this.yScaleMin - difference) * 10) / 10;
+			this.yScaleMax = Math.round((this.yScaleMax + difference) * 10) / 10;
+		}
+	}
 
-    this.yAxisLabel = this.name;
-    this.data = [{
-      name: this.name,
-      series: this.series
-    }];
-  }
+	// bind 'this' to formatting fn so we get range
+	dateTickFormatting = (val) => {
+		// TODO: select range, default: day
+		let time;
+		switch (this.range) {
+			case 'week':
+				time = moment(val).format("ddd");
+				break;
+			case 'day':
+			default:
+				time = moment(val).format("HH:mm");
+		}
+		
+		return time;
+	
+	}
 
-  getColorSet(name: string) {
-    return find(colorSets, set => set.name === name);
-  }
+	valueTickFormatting(val) {
+		return val;
+	}
 
-  balanceScales() {
-    // add a padding of half the difference of min and max
-    // to the extremes to even out the chart a bit
-    if (this.yScaleMin !== undefined && this.yScaleMax !== undefined) {
-      const difference = (this.yScaleMax - this.yScaleMin); // * 0.25;
-      this.yScaleMin = Math.round((this.yScaleMin - difference) * 10) / 10;
-      this.yScaleMax = Math.round((this.yScaleMax + difference) * 10) / 10;
-    }
-  }
+	onSelect(event) {
+		console.log('event', event);
+	}
 
-  dateTickFormatting(val) {
-    // TODO: select range, default: day
-    const time = moment(val).format("HH:mm");
-    return time;
-  }
+	formatDate(date) {
+		console.log('date', date);
+		return 'test';
+	}
 
-  valueTickFormatting(val) {
-    return val;
-  }
-
-  onSelect(event) {
-    console.log('event', event);
-  }
+	log(val) { console.log(val); }
 
 }

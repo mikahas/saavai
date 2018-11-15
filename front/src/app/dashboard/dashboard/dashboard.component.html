@@ -67,6 +67,7 @@
 			<div class="saa-chart" fxFlex>
 
 				<saa-line-chart
+					[range]="activeRange"
 					[name]="element.name"
 					[series]="element.series"
 					[yScaleMin]="element.extremes.min"
